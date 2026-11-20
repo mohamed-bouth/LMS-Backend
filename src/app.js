@@ -6,12 +6,15 @@ import errorHandler from "./middlewares/errorHandler.js";
 import routes from "./routes.js"
 import swaggerUi from "swagger-ui-express"
 import swaggerSpec from "./config/swagger.js";
+import cors from "cors"
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+
+app.use(cors())
 
 app.use(morgan('common'))
 
