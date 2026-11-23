@@ -7,6 +7,7 @@ import {
   publishCourse,
   unpublishCourse,
   archivedCourse,
+  getCourseForManageById
 } from "../controllers/courseController.js";
 import { getModulesByCourse } from "../controllers/moduleController.js";
 import { authenticate, authorize } from "../middlewares/Auth.js";
@@ -15,6 +16,8 @@ import { ownCourse } from "../middlewares/ownCourse.js";
 const router = express.Router();
 
 router.get("/", getCourses);
+
+router.get("/manage/:id", authenticate, authorize("admin", "trainer"), ownCourse, getCourseForManageById)
 
 router.get("/:id", getCourseById);
 

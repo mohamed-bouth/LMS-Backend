@@ -74,6 +74,33 @@ export async function getCourseById(req, res, next) {
     }
 }
 
+export async function getCourseForManageById(req, res, next) {
+    try {
+
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return next(new ValidationError("Invalid course ID"));
+        }
+
+        const course = await Course.findById(req.params.id)
+
+        if (!course) {
+            return next(new NotFoundError("Course not found"));
+        }
+
+        res.status(200).json({
+            success: true,
+            data: {
+                course
+            }
+
+        })
+
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 export async function createCourse(req, res, next) {
     try {
         console.log("authenticated user", req.user);

@@ -75,8 +75,6 @@ export async function login(req, res, next) {
     // Find user
     const user = await User.findOne({ email }).select('password');
 
-    console.log(user)
-
     if (!user) {
       return next(new ValidationError("Invalid credentials."));
     }
