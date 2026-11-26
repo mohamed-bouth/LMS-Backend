@@ -285,6 +285,24 @@ Module status values are `accessible`, `locked`, `in progress`, and `done`. The 
 
 `enrolledLearnersCount` counts active and completed enrollments. `averageProgress` is the rounded average progress percentage for enrolled learners with progress greater than zero; it is `0` when there are no such progress records. `coursesCount` is the number of trainer-owned courses in the response.
 
+### Admin user management
+
+All user-management endpoints require an admin bearer token. List users with optional `role`, `accountStatus`, and `search` filters, plus `page` (default `1`) and `limit` (default `20`, maximum `100`):
+
+```text
+GET /api/admin/users?role=learner&accountStatus=active&search=samira&page=1&limit=20
+```
+
+Admins can also retrieve a user by ID, create a user, and update a user's name, email, role, or account status:
+
+```http
+GET   /api/admin/users/:userId
+POST  /api/admin/users
+PATCH /api/admin/users/:userId
+```
+
+Creation requires `name`, `email`, and a password of at least 8 characters. `role` defaults to `learner`; `accountStatus` defaults to `active`. Updates accept only `name`, `email`, `role`, and `accountStatus`. Passwords and reset tokens are never returned, and at least one active admin must remain. Accounts are suspended or reactivated through `accountStatus`; this API does not permanently delete users.
+
 ## API overview
 
 Protected endpoints require a bearer token and enforce the listed role and ownership checks.
@@ -299,6 +317,10 @@ Protected endpoints require a bearer token and enforce the listed role and owner
 | `POST` | `/api/auth/forgot-password` | Public |
 | `POST` | `/api/auth/reset-password` | Public |
 | `GET` | `/api/profiles/me` | Authenticated user |
+| `GET` | `/api/admin/users` | Admin; supports role, account status, search, and pagination filters |
+| `GET` | `/api/admin/users/:userId` | Admin |
+| `POST` | `/api/admin/users` | Admin |
+| `PATCH` | `/api/admin/users/:userId` | Admin |
 
 ### Courses, modules, and resources
 

@@ -14,6 +14,7 @@ import trainerPreferenceRoutes from "./routes/trainerPreferenceRoutes.js";
 import quizAttemptRoutes from "./routes/quizAttemptsRoutes.js";
 import adminConfigRoutes from "./routes/adminConfigRoutes.js"
 import adminJobRoutes from "./routes/adminJobRoutes.js"
+import adminUserRoutes from "./routes/adminUserRoutes.js"
 
 const router = express.Router()
 
@@ -31,5 +32,6 @@ router.use("/quizzes", quizRoutes)
 router.use("/quiz/attempts", quizAttemptRoutes)
 router.use("/admin",adminConfigRoutes)  
 router.use("/admin/jobs",adminJobRoutes)
+router.use("/admin/users", adminUserRoutes)
 
 export default router

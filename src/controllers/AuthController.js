@@ -1,6 +1,10 @@
 import User from "../models/User.js";
 import { comparePassword, createToken, hashPassword } from "../utils/jwtHelper.js";
-import { ConflictError, ValidationError } from "../utils/errors.js";
+import {
+  ConflictError,
+  ForbiddenError,
+  ValidationError,
+} from "../utils/errors.js";
 import { sendWelcomeEmail } from "../services/email/notificationService.js";
 import { randomBytes, createHash } from "node:crypto";
 import { sendPasswordResetEmail } from "../services/email/notificationService.js"; 
@@ -73,7 +77,7 @@ export async function login(req, res, next) {
       return next(new ValidationError("Email and password are required."));
     }
     // Find user
-    const user = await User.findOne({ email }).select('password');
+    const user = await User.findOne({ email }).select("+password accountStatus");
 
     if (!user) {
       return next(new ValidationError("Invalid credentials."));
@@ -84,6 +88,10 @@ export async function login(req, res, next) {
 
     if (!isMatch) {
       return next(new ValidationError("Invalid credentials."));
+    }
+
+    if (user.accountStatus !== "active") {
+      return next(new ForbiddenError("Account is suspended."));
     }
 
     // Create token
@@ -199,7 +207,5 @@ export async function resetPassword(req, res, next) {
     next(error);
   }
 }
-
-
 
 
